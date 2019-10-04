@@ -8,7 +8,8 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="JavaFX-EstadoCidade.jar" size="29181" download="eager" />
+    <jar href="JavaFX-EstadoCidade.jar" size="31843" download="eager" />
+    <jar href="lib\mysql-connector-java-8.0.17.jar" size="2321813" download="eager" />
   </resources>
   <jfx:javafx-desc  width="800" height="600" main-class="br.com.pedroenju.JavaFXEstadoCidade"  name="JavaFX-EstadoCidade" />
   <update check="always"/>

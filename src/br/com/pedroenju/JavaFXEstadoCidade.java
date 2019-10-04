@@ -3,6 +3,9 @@ package br.com.pedroenju;
 import br.com.pedroenju.contracts.TableModelInterface;
 import br.com.pedroenju.controller.NoIdeaController;
 import br.com.pedroenju.controller.PesquisaController;
+import br.com.pedroenju.dao.CidadeDao;
+import br.com.pedroenju.dao.EstadoDao;
+import br.com.pedroenju.services.Conexao;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -42,7 +45,7 @@ public class JavaFXEstadoCidade extends Application {
         nic.getBtnPesquisarEstado().addEventHandler(ActionEvent.ACTION, (event) -> {
             nic.getStackPane().getChildren().clear();
             nic.getStackPane().getChildren().add(borderPane);
-            TableModelInterface tableModel = new FakeDaoEstado();
+            TableModelInterface tableModel = new EstadoDao(Conexao.getInstance().getConn());
             pc.config(tableModel);
             stage.setTitle("Pesquisa de Estado");
         });
@@ -50,7 +53,7 @@ public class JavaFXEstadoCidade extends Application {
         nic.getBtnPesquisarCidade().addEventHandler(ActionEvent.ACTION ,(event) -> {
             nic.getStackPane().getChildren().clear();
             nic.getStackPane().getChildren().add(borderPane);
-            TableModelInterface tableModel = new FakeDaoCidade();
+            TableModelInterface tableModel = new CidadeDao(Conexao.getInstance().getConn());
             pc.config(tableModel);
             stage.setTitle("Pesquisa de Cidade");
         });

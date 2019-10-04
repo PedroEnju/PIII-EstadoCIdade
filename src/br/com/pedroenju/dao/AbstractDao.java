@@ -49,7 +49,7 @@ public abstract class AbstractDao implements DaoInterface {
      */
     protected <T> T executeSQL(ISQLInstruction iSQL) throws SQLException {
         PreparedStatement ps = this.connect.prepareStatement(iSQL.getSQL(), Statement.RETURN_GENERATED_KEYS);
-        
+
         if(iSQL instanceof ISQLSelect) {
             ResultSet rs = ps.executeQuery();
             return (T) this.resultSetToArrayList(rs);

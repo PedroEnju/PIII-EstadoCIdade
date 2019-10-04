@@ -5,17 +5,21 @@ import br.com.pedroenju.contracts.IFilter;
 import br.com.pedroenju.contracts.ISQLInsert;
 import br.com.pedroenju.contracts.ISQLInstruction;
 import br.com.pedroenju.contracts.ISQLUpdate;
+import br.com.pedroenju.contracts.TableModelInterface;
 import br.com.pedroenju.model.Estado;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  *
  * @author Pedro Enju
  */
-public class EstadoDao extends AbstractDao {
+public class EstadoDao extends AbstractDao implements TableModelInterface {
 
     public EstadoDao(Connection conn) {
         this.connect = conn;
@@ -59,14 +63,14 @@ public class EstadoDao extends AbstractDao {
     public ArrayList<Object> getAll(ICriterion criterion) {
         ISQLInstruction sql = this.newInstruction(ISQLInstruction.QueryType.SELECT);
         sql.setCriterion(criterion);
-
+        
         try {
             ArrayList<HashMap<String, Object>> list = this.executeSQL(sql);
             if (!list.isEmpty()) {
                 ArrayList<Estado> states = new ArrayList();
                 for (HashMap<String, Object> row : list) {
                     Estado state = new Estado();
-                    state.setIdEstado((long) row.get("idEstado"));
+                    state.setIdEstado((int) row.get("idEstado"));
                     state.setNomeEstado((String) row.get("nomeEstado"));
                     state.setUf((String) row.get("uf"));
                     states.add(state);
@@ -104,6 +108,28 @@ public class EstadoDao extends AbstractDao {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    @Override
+    public ArrayList<TableColumn<Object, Object>> getCols() {
+        ArrayList<TableColumn<Object, Object>> cols = new ArrayList();
+        
+        TableColumn<Object, Object> colName = new TableColumn<>("Nome Estado");
+        colName.setCellValueFactory(new PropertyValueFactory<>("nomeEstado"));
+        cols.add(colName);
+        
+        TableColumn<Object, Object> colUF = new TableColumn<>("UF");
+        colUF.setCellValueFactory(new PropertyValueFactory<>("uf"));
+        cols.add(colUF);
+        
+        return cols;
+    }
+
+    @Override
+    public ArrayList<Object> search(String search) {
+        ICriterion criterion = new ICriterion();
+        criterion.addExpression(new IFilter("nomeEstado", "like", "%" + search + "%"));
+        return this.getAll(criterion);
     }
 
 }

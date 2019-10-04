@@ -5,18 +5,22 @@ import br.com.pedroenju.contracts.IFilter;
 import br.com.pedroenju.contracts.ISQLInsert;
 import br.com.pedroenju.contracts.ISQLInstruction;
 import br.com.pedroenju.contracts.ISQLUpdate;
+import br.com.pedroenju.contracts.TableModelInterface;
 import br.com.pedroenju.model.Cidade;
 import br.com.pedroenju.model.Estado;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  *
  * @author Pedro Enju
  */
-public class CidadeDao extends AbstractDao {
+public class CidadeDao extends AbstractDao implements TableModelInterface {
 
     public CidadeDao(Connection conn) {
         this.connect = conn;
@@ -65,7 +69,7 @@ public class CidadeDao extends AbstractDao {
                 ArrayList<Cidade> citys = new ArrayList();
                 for (HashMap<String, Object> row : list) {
                     Cidade city = new Cidade();
-                    city.setIdCidade((long) row.get("idCidade"));
+                    city.setIdCidade((int) row.get("idCidade"));
                     city.setNomeCidade((String) row.get("nomeCidade"));
 
                     Estado estado = new Estado();
@@ -106,6 +110,24 @@ public class CidadeDao extends AbstractDao {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    @Override
+    public ArrayList<TableColumn<Object, Object>> getCols() {
+        ArrayList<TableColumn<Object, Object>> cols = new ArrayList();
+        
+        TableColumn<Object, Object> colName = new TableColumn<>("Nome Cidade");
+        colName.setCellValueFactory(new PropertyValueFactory<>("nomeCidade"));
+        cols.add(colName);
+        
+        return cols;
+    }
+
+    @Override
+    public ArrayList<Object> search(String search) {
+        ICriterion criterion = new ICriterion();
+        criterion.addExpression(new IFilter("nomeCidade", "like", "%" + search + "%"));
+        return this.getAll(criterion);
     }
 
 }
