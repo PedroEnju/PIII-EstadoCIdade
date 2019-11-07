@@ -34,5 +34,10 @@ public class Cidade {
     public void setNomeCidade(String nomeCidade) {
         this.nomeCidade = nomeCidade;
     }
+    
+    @Override
+    public String toString() {
+        return String.valueOf(this.idCidade) + " - " + this.nomeCidade;
+    }
 
 }

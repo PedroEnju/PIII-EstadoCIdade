@@ -40,18 +40,19 @@ public class CidadeDao extends AbstractDao implements TableModelInterface {
             sql = this.newInstruction(ISQLInstruction.QueryType.UPDATE);
         }
 
-        ((ISQLUpdate) sql).addRowData("nomeCidade", city.getNomeCidade());
         if (sql instanceof ISQLUpdate) {
+            ((ISQLUpdate) sql).addRowData("nomeCidade", city.getNomeCidade());
             ICriterion criterion = new ICriterion();
             criterion.addExpression(new IFilter("idCidade", "=", Long.toString(city.getIdCidade())));
             sql.setCriterion(criterion);
         } else if (sql instanceof ISQLInsert) {
             ((ISQLInsert) sql).getRowData().put("idCidade", null);
+            ((ISQLInsert) sql).getRowData().put("nomeCidade", city.getNomeCidade());
         }
 
         try {
             Object response = this.executeSQL(sql);
-            if(sql instanceof ISQLInsert && response instanceof Long) {
+            if (sql instanceof ISQLInsert && response instanceof Long) {
                 city.setIdCidade((Long) response);
             }
         } catch (SQLException e) {
@@ -97,13 +98,13 @@ public class CidadeDao extends AbstractDao implements TableModelInterface {
     @Override
     public void delete(Object o) {
         Cidade city = (Cidade) o;
-        
-        if(city.getIdCidade() > 0) {
+
+        if (city.getIdCidade() > 0) {
             ISQLInstruction sql = this.newInstruction(ISQLInstruction.QueryType.DELETE);
             ICriterion criterion = new ICriterion();
             criterion.addExpression(new IFilter("idCidade", "=", Long.toString(city.getIdCidade())));
             sql.setCriterion(criterion);
-            
+
             try {
                 this.executeSQL(sql);
             } catch (SQLException e) {
@@ -115,11 +116,11 @@ public class CidadeDao extends AbstractDao implements TableModelInterface {
     @Override
     public ArrayList<TableColumn<Object, Object>> getCols() {
         ArrayList<TableColumn<Object, Object>> cols = new ArrayList();
-        
+
         TableColumn<Object, Object> colName = new TableColumn<>("Nome Cidade");
         colName.setCellValueFactory(new PropertyValueFactory<>("nomeCidade"));
         cols.add(colName);
-        
+
         return cols;
     }
 

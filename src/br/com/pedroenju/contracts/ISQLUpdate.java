@@ -41,7 +41,8 @@ public class ISQLUpdate extends ISQLInstruction {
         this.sql.append("WHERE ");
         this.sql.append(this.criterion.dump());
         
-        return this.sql.toString().replace("'NULL'", "'NULL'");
+        String str = this.sql.toString().replace("'NULL'", "NULL");
+        return str.replace("'null'", "NULL");
     }
 
     public HashMap getRowData() {

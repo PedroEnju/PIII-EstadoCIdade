@@ -34,4 +34,9 @@ public class Estado {
         this.uf = uf;
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(this.idEstado) + " - " + this.nomeEstado + " - " + this.uf;
+    }
+    
 }

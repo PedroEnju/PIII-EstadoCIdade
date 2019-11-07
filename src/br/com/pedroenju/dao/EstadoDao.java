@@ -39,19 +39,21 @@ public class EstadoDao extends AbstractDao implements TableModelInterface {
             sql = this.newInstruction(ISQLInstruction.QueryType.UPDATE);
         }
 
-        ((ISQLUpdate) sql).addRowData("nomeEstado", state.getNomeEstado());
-        ((ISQLUpdate) sql).addRowData("uf", state.getUf());
         if (sql instanceof ISQLUpdate) {
+            ((ISQLUpdate) sql).addRowData("nomeEstado", state.getNomeEstado());
+            ((ISQLUpdate) sql).addRowData("uf", state.getUf());
             ICriterion criterion = new ICriterion();
             criterion.addExpression(new IFilter("idEstado", "=", Long.toString(state.getIdEstado())));
             sql.setCriterion(criterion);
         } else if (sql instanceof ISQLInsert) {
             ((ISQLInsert) sql).getRowData().put("idEstado", null);
+            ((ISQLInsert) sql).getRowData().put("nomeEstado", state.getNomeEstado());
+            ((ISQLInsert) sql).getRowData().put("uf", state.getUf());
         }
 
         try {
             Object response = this.executeSQL(sql);
-            if(sql instanceof ISQLInsert && response instanceof Long) {
+            if (sql instanceof ISQLInsert && response instanceof Long) {
                 state.setIdEstado((Long) response);
             }
         } catch (SQLException e) {
@@ -63,7 +65,7 @@ public class EstadoDao extends AbstractDao implements TableModelInterface {
     public ArrayList<Object> getAll(ICriterion criterion) {
         ISQLInstruction sql = this.newInstruction(ISQLInstruction.QueryType.SELECT);
         sql.setCriterion(criterion);
-        
+
         try {
             ArrayList<HashMap<String, Object>> list = this.executeSQL(sql);
             if (!list.isEmpty()) {
@@ -95,13 +97,13 @@ public class EstadoDao extends AbstractDao implements TableModelInterface {
     @Override
     public void delete(Object o) {
         Estado state = (Estado) o;
-        
-        if(state.getIdEstado() > 0) {
+
+        if (state.getIdEstado() > 0) {
             ISQLInstruction sql = this.newInstruction(ISQLInstruction.QueryType.DELETE);
             ICriterion criterion = new ICriterion();
             criterion.addExpression(new IFilter("idEstado", "=", Long.toString(state.getIdEstado())));
             sql.setCriterion(criterion);
-            
+
             try {
                 this.executeSQL(sql);
             } catch (SQLException e) {
@@ -113,15 +115,15 @@ public class EstadoDao extends AbstractDao implements TableModelInterface {
     @Override
     public ArrayList<TableColumn<Object, Object>> getCols() {
         ArrayList<TableColumn<Object, Object>> cols = new ArrayList();
-        
+
         TableColumn<Object, Object> colName = new TableColumn<>("Nome Estado");
         colName.setCellValueFactory(new PropertyValueFactory<>("nomeEstado"));
         cols.add(colName);
-        
+
         TableColumn<Object, Object> colUF = new TableColumn<>("UF");
         colUF.setCellValueFactory(new PropertyValueFactory<>("uf"));
         cols.add(colUF);
-        
+
         return cols;
     }
 

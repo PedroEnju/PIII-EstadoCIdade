@@ -25,7 +25,8 @@ public class ISQLInsert extends ISQLInstruction {
         this.sql.append(String.join("', '", this.rowData.values()));
         this.sql.append("')");
         
-        return this.sql.toString().replace("'NULL'", "NULL");
+        String str = this.sql.toString().replace("'NULL'", "NULL");
+        return str.replace("'null'", "NULL");
     }
 
     public HashMap<String, String> getRowData() {

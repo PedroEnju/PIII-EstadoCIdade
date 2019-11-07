@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" fx:id="apCrud" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="-1.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="br.com.pedroenju.controller.CrudController">
+  <children>
+    <BorderPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <bottom>
+        <HBox prefHeight="40.0" prefWidth="600.0" spacing="8.0">
+          <children>
+            <Button fx:id="btnNovo" mnemonicParsing="false" onAction="#btnNovoClick" prefHeight="68.0" prefWidth="61.0" text="Novo" />
+            <Button fx:id="btnEditar" mnemonicParsing="false" onAction="#btnEditarClick" prefHeight="68.0" prefWidth="61.0" text="Editar" />
+            <Button fx:id="btnSalvar" mnemonicParsing="false" onAction="#btnSalvarClick" prefHeight="68.0" prefWidth="61.0" text="Salvar" />
+            <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#btnCancelarClick" prefHeight="24.0" prefWidth="70.0" text="Cancelar" />
+            <Button fx:id="btnRemover" mnemonicParsing="false" onAction="#btnRemoverClick" prefHeight="24.0" prefWidth="70.0" text="Remover" />
+          </children>
+          <padding>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" fx:id="x1" />
+          </padding>
+        </HBox>
+      </bottom>
+      <center>
+        <StackPane fx:id="stackPane" prefHeight="150.0" prefWidth="200.0" />
+      </center>
+      <top>
+        <Label fx:id="lblTitulo" prefHeight="40.0" prefWidth="600.0" text="Título" BorderPane.margin="$x1">
+          <font>
+            <Font size="28.0" />
+          </font>
+        </Label>
+      </top>
+    </BorderPane>
+  </children>
+</AnchorPane>

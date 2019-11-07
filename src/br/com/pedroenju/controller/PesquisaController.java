@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -57,6 +58,14 @@ public class PesquisaController implements Initializable {
     private void btnPesquisarOnAction(ActionEvent event) {
         this.tableViewPesquisar.getItems().clear();
         this.tableViewPesquisar.getItems().addAll(FXCollections.observableArrayList(this.tableModel.search(inputPesquisar.getText())));
+    }
+    
+    public Parent getLayout() {
+        return this.borderPanePesquisar;
+    }
+
+    public TableView<Object> getTableViewPesquisar() {
+        return tableViewPesquisar;
     }
 
 }
