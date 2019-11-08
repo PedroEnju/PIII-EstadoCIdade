@@ -22,8 +22,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class CidadeDao extends AbstractDao implements TableModelInterface {
 
+    private EstadoDao daoEstado;
+
     public CidadeDao(Connection conn) {
         this.connect = conn;
+        this.daoEstado = new EstadoDao(conn);
     }
 
     @Override
@@ -48,6 +51,7 @@ public class CidadeDao extends AbstractDao implements TableModelInterface {
         } else if (sql instanceof ISQLInsert) {
             ((ISQLInsert) sql).getRowData().put("idCidade", null);
             ((ISQLInsert) sql).getRowData().put("nomeCidade", city.getNomeCidade());
+            ((ISQLInsert) sql).getRowData().put("idEstado", Long.toString(city.getEstado().getIdEstado()));
         }
 
         try {
@@ -67,19 +71,23 @@ public class CidadeDao extends AbstractDao implements TableModelInterface {
         try {
             ArrayList<HashMap<String, Object>> list = this.executeSQL(sql);
             if (!list.isEmpty()) {
-                ArrayList<Cidade> citys = new ArrayList();
+                ArrayList<Cidade> cities = new ArrayList();
                 for (HashMap<String, Object> row : list) {
                     Cidade city = new Cidade();
                     city.setIdCidade((int) row.get("idCidade"));
                     city.setNomeCidade((String) row.get("nomeCidade"));
 
-                    Estado estado = new Estado();
-                    city.setEstado(estado);
+                    if (((int) row.get("idEstado")) > 0) {
+                        city.setEstado(
+                                ((ArrayList<Estado>) daoEstado.getById(
+                                        ((Integer) row.get("idEstado")).longValue())).get(0)
+                        );
+                    }
 
-                    citys.add(city);
+                    cities.add(city);
                 }
 
-                return (ArrayList) citys;
+                return (ArrayList) cities;
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -120,6 +128,10 @@ public class CidadeDao extends AbstractDao implements TableModelInterface {
         TableColumn<Object, Object> colName = new TableColumn<>("Nome Cidade");
         colName.setCellValueFactory(new PropertyValueFactory<>("nomeCidade"));
         cols.add(colName);
+        
+        TableColumn<Object, Object> estadoUF = new TableColumn<>("Estado");
+        estadoUF.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        cols.add(estadoUF);
 
         return cols;
     }
