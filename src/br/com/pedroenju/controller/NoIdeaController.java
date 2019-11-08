@@ -20,6 +20,8 @@ public class NoIdeaController implements Initializable {
     @FXML
     private Button btnPesquisarCidade;
     @FXML
+    private Button btnPesquisarCliente;
+    @FXML
     private StackPane stackPane;
 
     /**
@@ -44,6 +46,14 @@ public class NoIdeaController implements Initializable {
 
     public void setBtnPesquisarCidade(Button btnPesquisarCidade) {
         this.btnPesquisarCidade = btnPesquisarCidade;
+    }
+
+    public Button getBtnPesquisarCliente() {
+        return btnPesquisarCliente;
+    }
+
+    public void setBtnPesquisarCliente(Button btnPesquisarCliente) {
+        this.btnPesquisarCliente = btnPesquisarCliente;
     }
 
     public StackPane getStackPane() {

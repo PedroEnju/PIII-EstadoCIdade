@@ -9,6 +9,7 @@ import br.com.pedroenju.controller.LookupController;
 import br.com.pedroenju.controller.NoIdeaController;
 import br.com.pedroenju.controller.PesquisaController;
 import br.com.pedroenju.dao.CidadeDao;
+import br.com.pedroenju.dao.ClienteDao;
 import br.com.pedroenju.dao.EstadoDao;
 import br.com.pedroenju.services.Conexao;
 import javafx.application.Application;
@@ -60,6 +61,10 @@ public class JavaFXEstadoCidade extends Application {
         Parent formCidade = loadFormCidade.load();
         FormControllerInterface cc = loadFormCidade.getController();
         
+        FXMLLoader loadFormCliente = new FXMLLoader(getClass().getResource("/br/com/pedroenju/view/FormClienteView.fxml"));
+        Parent formCliente = loadFormCliente.load();
+        FormControllerInterface ccl = loadFormCliente.getController();
+        
         FXMLLoader loadLookup = new FXMLLoader(getClass().getResource("/br/com/pedroenju/view/Lookup.fxml"));
         Parent formLookup = loadLookup.load();
         FormControllerInterface cl = loadLookup.getController();
@@ -85,6 +90,19 @@ public class JavaFXEstadoCidade extends Application {
             nic.getStackPane().getChildren().clear();
             nic.getStackPane().getChildren().add(crudView);
             stage.setTitle("Pesquisa de Cidade");
+        });
+
+        nic.getBtnPesquisarCliente().addEventHandler(ActionEvent.ACTION ,(event) -> {
+            ((LookupController) cl).configurar(new CidadeDao(Conexao.getInstance().getConn()), "Pesquisar Cidade");
+            
+            TableModelInterface tableModel = new ClienteDao(Conexao.getInstance().getConn());
+            ((LookupControllerInterface) ccl).setLookUp((LookupControllerInterface) cl);
+            pc.config(tableModel);
+            ci.config((DaoInterface) tableModel, pc, ccl, "Gerenciar Cliente");
+            
+            nic.getStackPane().getChildren().clear();
+            nic.getStackPane().getChildren().add(crudView);
+            stage.setTitle("Pesquisa de Cliente");
         });
         
     }

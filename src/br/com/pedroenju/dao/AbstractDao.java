@@ -76,8 +76,8 @@ public abstract class AbstractDao implements DaoInterface {
         ArrayList list = new ArrayList();
         while(rs.next()) {
             HashMap row = new HashMap(numCols);
-            
-            for (int i = 1; i < numCols; i++) {
+
+            for (int i = 1; i <= numCols; i++) {
                 row.put(meta.getColumnName(i), rs.getObject(i));
             }
             

@@ -7,7 +7,7 @@ import br.com.pedroenju.contracts.ISQLInstruction;
 import br.com.pedroenju.contracts.ISQLUpdate;
 import br.com.pedroenju.contracts.TableModelInterface;
 import br.com.pedroenju.model.Cidade;
-import br.com.pedroenju.model.Estado;
+import br.com.pedroenju.model.Cliente;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,44 +19,44 @@ import javafx.scene.control.cell.PropertyValueFactory;
  *
  * @author Pedro Enju
  */
-public class CidadeDao extends AbstractDao implements TableModelInterface {
+public class ClienteDao extends AbstractDao implements TableModelInterface {
 
-    private EstadoDao daoEstado;
-
-    public CidadeDao(Connection conn) {
+    private CidadeDao daoCidade;
+    
+    public ClienteDao(Connection conn) {
         this.connect = conn;
-        this.daoEstado = new EstadoDao(conn);
+        this.daoCidade = new CidadeDao(conn);
     }
-
+    
     @Override
     protected String getTableName() {
-        return "cidade";
+        return "cliente";
     }
 
     @Override
     public void save(Object o) {
-        Cidade city = (Cidade) o;
+        Cliente client = (Cliente) o;
 
         ISQLInstruction sql = this.newInstruction(ISQLInstruction.QueryType.INSERT);
-        if (city.getIdCidade() > 0) {
+        if (client.getIdCliente()> 0) {
             sql = this.newInstruction(ISQLInstruction.QueryType.UPDATE);
         }
 
         if (sql instanceof ISQLUpdate) {
-            ((ISQLUpdate) sql).addRowData("nomeCidade", city.getNomeCidade());
+            ((ISQLUpdate) sql).addRowData("nomeCliente", client.getNomeCliente());
             ICriterion criterion = new ICriterion();
-            criterion.addExpression(new IFilter("idCidade", "=", Long.toString(city.getIdCidade())));
+            criterion.addExpression(new IFilter("idCliente", "=", Long.toString(client.getIdCliente())));
             sql.setCriterion(criterion);
         } else if (sql instanceof ISQLInsert) {
-            ((ISQLInsert) sql).getRowData().put("idCidade", null);
-            ((ISQLInsert) sql).getRowData().put("nomeCidade", city.getNomeCidade());
-            ((ISQLInsert) sql).getRowData().put("idEstado", Long.toString(city.getEstado().getIdEstado()));
+            ((ISQLInsert) sql).getRowData().put("idCliente", null);
+            ((ISQLInsert) sql).getRowData().put("nomeCliente", client.getNomeCliente());
+            ((ISQLInsert) sql).getRowData().put("idCidade", Long.toString(client.getCidade().getIdCidade()));
         }
 
         try {
             Object response = this.executeSQL(sql);
             if (sql instanceof ISQLInsert && response instanceof Long) {
-                city.setIdCidade((Long) response);
+                client.setIdCliente((Long) response);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -70,23 +70,23 @@ public class CidadeDao extends AbstractDao implements TableModelInterface {
         try {
             ArrayList<HashMap<String, Object>> list = this.executeSQL(sql);
             if (!list.isEmpty()) {
-                ArrayList<Cidade> cities = new ArrayList();
+                ArrayList<Cliente> clients = new ArrayList();
                 for (HashMap<String, Object> row : list) {
-                    Cidade city = new Cidade();
-                    city.setIdCidade((int) row.get("idCidade"));
-                    city.setNomeCidade((String) row.get("nomeCidade"));
-
-                    if (((int) row.get("idEstado")) > 0) {
-                        city.setEstado(
-                                ((ArrayList<Estado>) daoEstado.getById(
-                                        ((Integer) row.get("idEstado")).longValue())).get(0)
+                    Cliente client = new Cliente();
+                    client.setIdCliente((int) row.get("idCliente"));
+                    client.setNomeCliente((String) row.get("nomeCliente"));
+                    
+                    if (((int) row.get("idCidade")) > 0) {
+                        client.setCidade(
+                                ((ArrayList<Cidade>) daoCidade.getById(
+                                        ((Integer) row.get("idCidade")).longValue())).get(0)
                         );
                     }
 
-                    cities.add(city);
+                    clients.add(client);
                 }
 
-                return (ArrayList) cities;
+                return (ArrayList) clients;
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -98,18 +98,18 @@ public class CidadeDao extends AbstractDao implements TableModelInterface {
     @Override
     public Object getById(Long id) {
         ICriterion criterion = new ICriterion();
-        criterion.addExpression(new IFilter("idCidade", "=", Long.toString(id)));
+        criterion.addExpression(new IFilter("idCliente", "=", Long.toString(id)));
         return this.getAll(criterion);
     }
 
     @Override
     public void delete(Object o) {
-        Cidade city = (Cidade) o;
+        Cliente client = (Cliente) o;
 
-        if (city.getIdCidade() > 0) {
+        if (client.getIdCliente()> 0) {
             ISQLInstruction sql = this.newInstruction(ISQLInstruction.QueryType.DELETE);
             ICriterion criterion = new ICriterion();
-            criterion.addExpression(new IFilter("idCidade", "=", Long.toString(city.getIdCidade())));
+            criterion.addExpression(new IFilter("idCliente", "=", Long.toString(client.getIdCliente())));
             sql.setCriterion(criterion);
 
             try {
@@ -122,15 +122,16 @@ public class CidadeDao extends AbstractDao implements TableModelInterface {
 
     @Override
     public ArrayList<TableColumn<Object, Object>> getCols() {
+    
         ArrayList<TableColumn<Object, Object>> cols = new ArrayList();
 
-        TableColumn<Object, Object> colName = new TableColumn<>("Nome Cidade");
-        colName.setCellValueFactory(new PropertyValueFactory<>("nomeCidade"));
+        TableColumn<Object, Object> colName = new TableColumn<>("Nome Cliente");
+        colName.setCellValueFactory(new PropertyValueFactory<>("nomeCliente"));
         cols.add(colName);
         
-        TableColumn<Object, Object> estado = new TableColumn<>("Estado");
-        estado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        cols.add(estado);
+        TableColumn<Object, Object> cidade = new TableColumn<>("Cidade");
+        cidade.setCellValueFactory(new PropertyValueFactory<>("cidade"));
+        cols.add(cidade);
 
         return cols;
     }
@@ -138,8 +139,8 @@ public class CidadeDao extends AbstractDao implements TableModelInterface {
     @Override
     public ArrayList<Object> search(String search) {
         ICriterion criterion = new ICriterion();
-        criterion.addExpression(new IFilter("nomeCidade", "like", "%" + search + "%"));
+        criterion.addExpression(new IFilter("nomeCliente", "like", "%" + search + "%"));
         return this.getAll(criterion);
     }
-
+    
 }

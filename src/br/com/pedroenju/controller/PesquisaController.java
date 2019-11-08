@@ -2,6 +2,7 @@ package br.com.pedroenju.controller;
 
 import br.com.pedroenju.contracts.TableModelInterface;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -57,7 +58,10 @@ public class PesquisaController implements Initializable {
     @FXML
     private void btnPesquisarOnAction(ActionEvent event) {
         this.tableViewPesquisar.getItems().clear();
-        this.tableViewPesquisar.getItems().addAll(FXCollections.observableArrayList(this.tableModel.search(inputPesquisar.getText())));
+        ArrayList<Object> x = this.tableModel.search(inputPesquisar.getText());
+        if (x != null && x.size() > 0) {
+            this.tableViewPesquisar.getItems().addAll(FXCollections.observableArrayList(x));
+        }
     }
     
     public Parent getLayout() {

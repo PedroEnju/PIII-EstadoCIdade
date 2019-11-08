@@ -2,7 +2,7 @@ package br.com.pedroenju.controller;
 
 import br.com.pedroenju.contracts.LookupControllerInterface;
 import br.com.pedroenju.model.Cidade;
-import br.com.pedroenju.model.Estado;
+import br.com.pedroenju.model.Cliente;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
@@ -22,12 +22,10 @@ import javafx.scene.text.Font;
 /**
  * FXML Controller class
  *
- * @author lukas
+ * @author Pedro Enju
  */
-public class FormCidadeController implements Initializable, LookupControllerInterface {
+public class FormClienteController implements Initializable, LookupControllerInterface {
 
-    @FXML
-    private AnchorPane apCidade;
     @FXML
     private Font x1;
     @FXML
@@ -35,10 +33,12 @@ public class FormCidadeController implements Initializable, LookupControllerInte
     @FXML
     private Insets x2;
     @FXML
-    private TextField txtEstado;
+    private TextField txtCidade;
     @FXML
     private Button btLookup;
-    private Cidade cidade;
+    @FXML
+    private AnchorPane apCliente;
+    private Cliente cliente;
     private LookupController lkp;
     private BooleanProperty hasActiveLookup;
 
@@ -51,8 +51,8 @@ public class FormCidadeController implements Initializable, LookupControllerInte
     }
 
     @FXML
-    private void buscarEstado(ActionEvent event) {
-        StackPane parent = (StackPane) apCidade.getParent();
+    private void buscarCidade(ActionEvent event) {
+        StackPane parent = (StackPane) apCliente.getParent();
         parent.getChildren().add(lkp.getLayout());
         lkp.startForm();
         this.hasActiveLookup.setValue(Boolean.TRUE);
@@ -69,7 +69,7 @@ public class FormCidadeController implements Initializable, LookupControllerInte
 
         lookup.setOnSucceeded((evt) -> {
             if (lookup.getValue() != null) {
-                cidade.setEstado((Estado) lookup.getValue());
+                cliente.setCidade((Cidade) lookup.getValue());
                 this.setModel(this.getModel());
             }
             this.hasActiveLookup.setValue(Boolean.FALSE);
@@ -80,33 +80,6 @@ public class FormCidadeController implements Initializable, LookupControllerInte
     }
 
     @Override
-    public Parent getLayout() {
-        return this.apCidade;
-    }
-
-    @Override
-    public void setModel(Object model) {
-        this.cidade = (Cidade) model;
-        txtNome.setText(this.cidade.getNomeCidade());
-        txtEstado.setText("");
-        if (this.cidade.getEstado() != null) {
-            txtEstado.setText(this.cidade.getEstado().getNomeEstado());
-        }
-    }
-
-    @Override
-    public Object getModel() {
-        this.cidade.setNomeCidade(txtNome.getText());
-
-        return this.cidade;
-    }
-
-    @Override
-    public void startForm() {
-        this.setModel(new Cidade());
-    }
-
-    @Override
     public void setLookUp(LookupControllerInterface lkp) {
         this.lkp = (LookupController) lkp;
     }
@@ -114,6 +87,33 @@ public class FormCidadeController implements Initializable, LookupControllerInte
     @Override
     public BooleanProperty hasActiveLookup() {
         return this.hasActiveLookup;
+    }
+
+    @Override
+    public Parent getLayout() {
+        return this.apCliente;
+    }
+
+    @Override
+    public void setModel(Object model) {
+        this.cliente = (Cliente) model;
+        this.txtNome.setText(this.cliente.getNomeCliente());
+        txtCidade.setText("");
+        if (this.cliente.getCidade() != null) {
+            txtCidade.setText(this.cliente.getCidade().getNomeCidade());
+        }
+    }
+
+    @Override
+    public Object getModel() {
+        this.cliente.setNomeCliente(txtNome.getText());
+        
+        return this.cliente;
+    }
+
+    @Override
+    public void startForm() {
+        this.setModel(new Cliente());
     }
 
 }
