@@ -22,12 +22,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class ClienteDao extends AbstractDao implements TableModelInterface {
 
     private CidadeDao daoCidade;
-    
+
     public ClienteDao(Connection conn) {
         this.connect = conn;
         this.daoCidade = new CidadeDao(conn);
     }
-    
+
     @Override
     protected String getTableName() {
         return "cliente";
@@ -38,12 +38,13 @@ public class ClienteDao extends AbstractDao implements TableModelInterface {
         Cliente client = (Cliente) o;
 
         ISQLInstruction sql = this.newInstruction(ISQLInstruction.QueryType.INSERT);
-        if (client.getIdCliente()> 0) {
+        if (client.getIdCliente() > 0) {
             sql = this.newInstruction(ISQLInstruction.QueryType.UPDATE);
         }
 
         if (sql instanceof ISQLUpdate) {
             ((ISQLUpdate) sql).addRowData("nomeCliente", client.getNomeCliente());
+            ((ISQLUpdate) sql).addRowData("idCidade", client.getCidade().getIdCidade());
             ICriterion criterion = new ICriterion();
             criterion.addExpression(new IFilter("idCliente", "=", Long.toString(client.getIdCliente())));
             sql.setCriterion(criterion);
@@ -75,7 +76,7 @@ public class ClienteDao extends AbstractDao implements TableModelInterface {
                     Cliente client = new Cliente();
                     client.setIdCliente((int) row.get("idCliente"));
                     client.setNomeCliente((String) row.get("nomeCliente"));
-                    
+
                     if (((int) row.get("idCidade")) > 0) {
                         client.setCidade(
                                 ((ArrayList<Cidade>) daoCidade.getById(
@@ -106,7 +107,7 @@ public class ClienteDao extends AbstractDao implements TableModelInterface {
     public void delete(Object o) {
         Cliente client = (Cliente) o;
 
-        if (client.getIdCliente()> 0) {
+        if (client.getIdCliente() > 0) {
             ISQLInstruction sql = this.newInstruction(ISQLInstruction.QueryType.DELETE);
             ICriterion criterion = new ICriterion();
             criterion.addExpression(new IFilter("idCliente", "=", Long.toString(client.getIdCliente())));
@@ -122,13 +123,13 @@ public class ClienteDao extends AbstractDao implements TableModelInterface {
 
     @Override
     public ArrayList<TableColumn<Object, Object>> getCols() {
-    
+
         ArrayList<TableColumn<Object, Object>> cols = new ArrayList();
 
         TableColumn<Object, Object> colName = new TableColumn<>("Nome Cliente");
         colName.setCellValueFactory(new PropertyValueFactory<>("nomeCliente"));
         cols.add(colName);
-        
+
         TableColumn<Object, Object> cidade = new TableColumn<>("Cidade");
         cidade.setCellValueFactory(new PropertyValueFactory<>("cidade"));
         cols.add(cidade);
@@ -142,5 +143,5 @@ public class ClienteDao extends AbstractDao implements TableModelInterface {
         criterion.addExpression(new IFilter("nomeCliente", "like", "%" + search + "%"));
         return this.getAll(criterion);
     }
-    
+
 }
